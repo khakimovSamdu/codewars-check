@@ -16,6 +16,17 @@ class Student(models.Model):
     def __str__(self) -> str:
         return self.name
     
-class Lesson(models.Model):
-    pass
+class Mavzu(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self) -> str:
+        return self.name
+
+class Problem(models.Model):
+    id = models.CharField(max_length=123, primary_key=True)
+    name = models.CharField(max_length=255)
+    mavzu = models.ForeignKey(Mavzu, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.name
 

@@ -30,7 +30,6 @@ def get_all_student(request: HttpRequest) -> dict:
             username = user.usrename
             url = f'https://www.codewars.com/api/v1/users/{username}/'
             get_data_all = requests.get(url=url).json()
-            print(get_data_all)
             student_data = {
                 'id': get_data_all['id'],
                 'username': get_data_all['username'],
@@ -40,6 +39,7 @@ def get_all_student(request: HttpRequest) -> dict:
                 'ranks': get_data_all['ranks']['overall']['name'],
                 'totalCompleted': get_data_all['codeChallenges']['totalCompleted']
             }
+            # print(student_data)
             result.append(student_data)
         return JsonResponse(result, safe=False)
     else:
@@ -63,7 +63,9 @@ def get_group_student(request: HttpRequest, group: str):
                 'ranks': get_data_all['ranks']['overall']['name'],
                 'totalCompleted': get_data_all['codeChallenges']['totalCompleted']
             }
-            if student_data['clan']==group:
+            print(student_data)
+            if student_data['clan'] == group:
+                
                 result.append(student_data)
         return JsonResponse(result, safe=False)
     else:
