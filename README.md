@@ -48,18 +48,18 @@ Groups endpoints:
 
 | Method | Endpoint | Description |
 | ------ | -------- | ----------- |
-| GET | /codewars/group/<group> | get students in group  |
+| GET | /codewars/group/ <group> | get students in group  |
 
 Students endpoints:
 
 | Method | Endpoint | Description |
 | ------ | -------- | ----------- |
 | GET    | /codewars/users/   | Get all students |
-| GET   | /codewars/user/<username>  | Get a student |
+| GET   | /codewars/user/ <username>  | Get a student |
 
 Results endpoints:
 
 |Method| Endpoint | Description|
 |------|----------|------------|
-|GET  | /codewars/train/<group>/<team> | Get all results in group |
-|GET  | /codewars/train/<group> | Get the a day results of everyone in the group |
+|GET  | /codewars/train/ <group>/ <team> | Get all results in group |
+|GET  | /codewars/train/ <group> | Get the a day results of everyone in the group |
