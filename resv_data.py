@@ -6,7 +6,7 @@ username = 'SoliyevNurbek'
 # url_train = f'https://www.codewars.com/kata/{problem}'
 # get_data = requests.get(url=url_train)
 page = 0
-url_comp = f'https://www.codewars.com/api/v1/users/{username}/code-challenges/completed?page={page}'
+url_comp = f'https://www.codewars.com/api/v1/users/{username}/code-challenges/completed'
 get_problems = requests.get(url=url_comp).json()
 print(get_problems)
 # url = f'https://www.codewars.com/api/v1/users/{username}/code-challenges/authored'
