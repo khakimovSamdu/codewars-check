@@ -47,17 +47,12 @@ def get_all_student(request: HttpRequest) -> dict:
 
 def get_group_student(request: HttpRequest, group: str):
     if request.method == "GET":
-        data = Student.objects.all()
+        users = Student.objects.filter(guruh__name__contains=group)
         result = []
-        problems = Problem.objects.all()
-        ls = []
-        for i in problems:
-            print(i)
-        print(ls)
-        for user in data:
+        
+        for user in users:
             username = user.usrename
             url = f'https://www.codewars.com/api/v1/users/{username}/'
-            
             get_data_all = requests.get(url=url).json()
             student_data = {
                 'id':get_data_all['id'],
@@ -68,10 +63,7 @@ def get_group_student(request: HttpRequest, group: str):
                 'ranks': get_data_all['ranks']['overall']['name'],
                 'totalCompleted': get_data_all['codeChallenges']['totalCompleted']
             }
-            
-            if student_data['clan'] == group:
-                
-                result.append(student_data)
+            result.append(student_data)
         return JsonResponse(result, safe=False)
     else:
         return HttpResponse("Method not GET")    
@@ -79,14 +71,12 @@ def get_group_student(request: HttpRequest, group: str):
 def completed_problem(request: HttpRequest, id):
     if request.method == "GET":
         users = Student.objects.all()
-        
         result = {}
         for user in users:
             username = user.usrename
             url = f'https://www.codewars.com/api/v1/users/{username}/code-challenges/completed'
             get = requests.get(url=url).json()
             data_problem = get['data']
-            print(len(data_problem))
             c = 0
             for problem in data_problem:
                 if problem['id']==id:
@@ -98,3 +88,41 @@ def completed_problem(request: HttpRequest, id):
         return JsonResponse(result)
     else:
         return HttpResponse("Method not GET")
+
+def team_is_problem(request: HttpRequest, group: str, team: str):
+    if request.method == "GET":
+        users = Student.objects.filter(guruh__name__contains=group)
+        result = []
+        problems = Problem.objects.filter(mavzu__name__contains=team)
+        
+        for user in users:
+            username = user.usrename
+            
+            url_totalPages = f'https://www.codewars.com/api/v1/users/{username}/code-challenges/completed'
+            totalPages = int(requests.get(url=url_totalPages).json()['totalPages'])
+            done = 0
+            failed = 0
+            masala_id_data = []
+            for total in range(totalPages):       
+                url_completed = f'https://www.codewars.com/api/v1/users/{username}/code-challenges/completed/?page={total}'
+                get_completed = requests.get(url=url_completed).json()['data']
+                for masala in get_completed:
+                    masala_id_data.append(masala['id'])
+
+            for problem in problems:
+                masala_id = problem.id
+                if masala_id in masala_id_data:
+                    done += 1
+                else:
+                    failed += 1
+
+            student_data = {
+                'username': username,
+                'done': done,
+                'failed': failed
+            }
+            result.append(student_data)
+
+        return JsonResponse(result, safe=False)
+    else:
+        return HttpResponse("Method not GET")    
