@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse, JsonResponse
 import requests
-from .models import Student, Problem, Mavzu, Group
+from .models import Student, Problem, DayComplated
+import json
+from datetime import datetime
+
 # Create your views here.
 
 
@@ -126,3 +129,36 @@ def team_is_problem(request: HttpRequest, group: str, team: str):
         return JsonResponse(result, safe=False)
     else:
         return HttpResponse("Method not GET")    
+        
+def completed_add(request: HttpRequest):
+    if request.method=='POST':
+        data_post = request.body.decode('utf-8')
+        data_post = json.loads(data_post)
+        username = data_post['username']
+        URL = f'https://www.codewars.com/api/v1/users/{username}/code-challenges/completed'
+        response = requests.get(URL)
+        if response.status_code == 200:
+            data = response.json()
+            count = 0
+            for CompletedChallenge in data['data']:
+                date = datetime.fromisoformat(CompletedChallenge['completedAt'])
+                now = datetime.now()
+                day, month, year = date.day,  date.month, date.year
+                day_now, month_now, year_now = now.day-1, now.month, now.year
+                if day==day_now and month==month_now and year==year_now:
+                    count += 1
+            print(count) 
+            student_instance = Student.objects.get(username='allamurodxakimov')
+            print(student_instance)  
+            save_data = DayComplated.objects.create(
+                complated = count,
+                guruh = student_instance
+            )
+            save_data.save() 
+            
+            return JsonResponse({'statust': 'OK'})
+        return HttpResponse('Statust code error')
+    else:
+        return JsonResponse({'Method': "error"})
+    
+        

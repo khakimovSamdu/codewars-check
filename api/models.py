@@ -9,7 +9,7 @@ class Group(models.Model):
         return self.name
 
 class Student(models.Model):
-    usrename = models.CharField(max_length=125)
+    username = models.CharField(max_length=125)
     name = models.CharField(max_length=125)
     guruh = models.ForeignKey(Group, on_delete=models.CASCADE)
 
@@ -29,4 +29,11 @@ class Problem(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+class DayComplated(models.Model):
+    complated = models.TextField()
+    guruh = models.ForeignKey(Student, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.complated
 
