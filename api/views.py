@@ -3,8 +3,7 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 import requests
 from .models import Student, Problem, DayComplated
 import json
-from datetime import datetime
-
+from datetime import datetime, date
 # Create your views here.
 
 
@@ -140,11 +139,13 @@ def completed_add(request: HttpRequest):
         if response.status_code == 200:
             data = response.json()
             count = 0
+            now = datetime.now()
+            bugungi_kun = now.timestamp()-24*60*60
+            now_old = date.fromtimestamp(bugungi_kun)
             for CompletedChallenge in data['data']:
-                date = datetime.fromisoformat(CompletedChallenge['completedAt'])
-                now = datetime.now()
-                day, month, year = date.day,  date.month, date.year
-                day_now, month_now, year_now = now.day-1, now.month, now.year
+                date_cod = datetime.fromisoformat(CompletedChallenge['completedAt'])
+                day, month, year = date_cod.day,  date_cod.month, date_cod.year
+                day_now, month_now, year_now = now_old.day, now_old.month, now_old.year
                 if day==day_now and month==month_now and year==year_now:
                     count += 1
             print(count) 
