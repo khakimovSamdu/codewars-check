@@ -35,5 +35,5 @@ class DayComplated(models.Model):
     guruh = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return self.complated
+        return str(self.guruh) + ' : ' + self.complated
 

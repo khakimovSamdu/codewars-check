@@ -149,13 +149,24 @@ def completed_add(request: HttpRequest):
                 if day==day_now and month==month_now and year==year_now:
                     count += 1
             print(count) 
-            student_instance = Student.objects.get(username='allamurodxakimov')
+            student_instance = Student.objects.get(username=username)
             print(student_instance)  
-            save_data = DayComplated.objects.create(
-                complated = count,
-                guruh = student_instance
-            )
-            save_data.save() 
+            try:
+                day_compalted_student = DayComplated.objects.filter(guruh=student_instance)
+                compated_ls = (day_compalted_student[0].complated).split()
+                competed_prob = 0
+                for i in compated_ls:
+                    competed_prob += int(i)
+                DayComplated.objects.filter(guruh=student_instance).update(
+                    complated = ' '.join(compated_ls) + ' ' + str(count + competed_prob) 
+                )
+                
+            except: 
+                save_data = DayComplated.objects.create(
+                    complated = count,
+                    guruh = student_instance
+                )
+                save_data.save() 
             
             return JsonResponse({'statust': 'OK'})
         return HttpResponse('Statust code error')
